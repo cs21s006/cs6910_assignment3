@@ -1,0 +1,8 @@
+pandas
+numpy
+keras
+tensorflow
+matplotlib
+seaborn
+tqdm
+mycolorpy
