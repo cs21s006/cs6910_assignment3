@@ -330,11 +330,11 @@ class TransliterationModel(object):
       
     def decode_to_text(self, inputs, encoder, decoder):
         sentence, done = "", False
-        beam_width = 1 if self.config.decoding_strategy == 'greedy' else self.config.beam_width
-        sentence = self.beam_search_decoder(inputs, encoder, decoder, beam_width)
+        beam_sizes = 1 if self.config.decoding_strategy == 'greedy' else self.config.beam_sizes
+        sentence = self.beam_search_decoder(inputs, encoder, decoder, beam_sizes)
         return sentence
 
-    def beam_search_decoder(self, inputs, encoder, decoder, beam_width):
+    def beam_search_decoder(self, inputs, encoder, decoder, beam_sizes):
         
         done, decoded_sentence = False, ""
 
@@ -360,7 +360,7 @@ class TransliterationModel(object):
                         candidate = [score - np.log(prob[j]), 0, target_sequence, states,  sequence_token + [j] , sequence_char + [char] ]
                         candidates.append(candidate)
             sorted_candidates = sorted(candidates, key=lambda x:x[0])
-            k = min(beam_width, len(sorted_candidates))
+            k = min(beam_sizes, len(sorted_candidates))
             sequences = sorted_candidates[:k]
             done = True
             for sequence in range(len(sequences)):
